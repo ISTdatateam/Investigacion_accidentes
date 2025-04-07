@@ -1,0 +1,52 @@
+// Árbol de Causas
+digraph {
+	A [label="Evento final:
+Jorge Krautz Torres fallece en el lugar"]
+	B [label="Causa inmediata:
+Jorge Krautz Torres recibe un golpe
+y cae al piso"]
+	C [label="Condición necesaria:
+El eje se proyecta
+directamente hacia el trabajador"]
+	D [label="Condición para 1.1:
+Se corta uno de los estrobos"]
+	E [label="Condición para 1.1:
+Extraer eje: pierde soporte
+y se mueve tipo péndulo"]
+	F [label="Otra causa necesaria:
+Desmontaje del eje propulsor"]
+	G [label="Condición para 1.2:
+Barcaza varada en la bahía"]
+	H [label="Condición para 1.2:
+Uso de tecles, estrobos y cuerdas"]
+	I [label="Condición para 1.2.2:
+Equipo de 5 trabajadores
+en posiciones diversas"]
+	J [label="Condición para 1.2.2.1:
+Jorge Krautz Torres en extremo,
+limpiando fluidos"]
+	K [label="Condición para 1.2.2.1:
+Compañeros manipulaban tecles"]
+	L [label="Condición para 1.2.2.1.2:
+Trabajador manobraba tecle
+verticalmente"]
+	M [label="Condición para 1.2.2.1.2:
+Trabajador operaba tecle
+diagonalmente"]
+	N [label="Condición para 1.2.2.1.2:
+Dos compañeros sostenían
+una cuerda para guiar"]
+	B -> A
+	C -> B
+	D -> C
+	E -> C
+	F -> B
+	G -> F
+	H -> F
+	I -> H
+	J -> I
+	K -> I
+	L -> K
+	M -> K
+	N -> K
+}

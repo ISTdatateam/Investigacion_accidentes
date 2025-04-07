@@ -1,0 +1,45 @@
+    '''
+    audio_value = st.audio_input("Coloca en un mensaje de voz la información preliminar que tienes del accidente")
+
+    if audio_value:
+        st.audio(audio_value)
+
+        try:  # Bloque principal para errores generales
+            audio_bytes = audio_value.read()
+            st.success("Audio codificado correctamente!")
+
+            # Botón de transcripción
+            if st.button("Transcribir con IA"):
+                try:  # Bloque interno para errores de transcripción
+                    audio_file = BytesIO(audio_bytes)
+                    audio_file.name = "audio.wav"
+                    transcript = client.audio.transcriptions.create(
+                        model=gptaudio,
+                        file=audio_file,
+                        response_format="text",
+                        prompt="El audio corresponde a la descripción de un accidente del trabajo"
+                    )
+                    st.session_state.respuestas['p0'] = transcript
+                    st.rerun()
+
+                except Exception as e:
+                    st.error(f"Error en la transcripción: {str(e)}")
+
+            # Procesamiento posterior a la transcripción
+            if 'p0' in st.session_state.respuestas:
+                respuesta = crear_pregunta(
+                    pregunta="Realiza una primera descripción del accidente",
+                    tipo="text",
+                    default=st.session_state.respuestas['p0'],
+                    key="p0"
+                )
+                st.session_state.respuestas['p0'] = respuesta
+
+
+        except Exception as e:  # Asegura que el try principal tenga su except
+            st.error(f"Error general en el proceso: {str(e)}")
+
+    else:
+        if botones_navegacion():
+            st.warning("Debes proporcionar un audio antes de continuar")
+    '''

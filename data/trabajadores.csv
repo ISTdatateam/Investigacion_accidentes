@@ -1,0 +1,3 @@
+id,accidente_id,ap_paterno,ap_materno,nombres,origen_doc,id_doc,fecha_nacimiento,sexo,hora_ingreso,hora_salida,jornada,jornada_otro
+e4de9dda,63f326e2,Gonzalez,Guzman,David,1,140924857,2025-04-01,Masculino,10:23,10:23,Diurna,
+6bde55b5,ba0d3f69,Gonzalez,Guzman,David,1,14092485-7,2025-04-01,Masculino,11:05,11:05,Diurna,

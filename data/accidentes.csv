@@ -1,0 +1,5 @@
+id,fecha,hora,cuv_centro,tipo_accidente,gravedad,direccion,descripcion
+20cfffb9,2025-03-08,00:15:00,533d3613,,,Esta es la tercera direccion de accidente,Ahora si que fue grave
+0265a9a2,2025-03-07,09:50,533d3613,Por definir,Leve,Aqui va la dirección del accidente numero 2,Estaba arreglando un enchufe y subrio una descarga
+63f326e2,2025-04-01,09:51,533d3613,Por definir,Leve,Esta es una prueba ,
+ba0d3f69,2025-04-01,11:04,0cb6eafc,Por definir,Leve,guayaquil 324,Caido de altura
