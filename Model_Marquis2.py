@@ -33,7 +33,12 @@ def current_level():
 
 def add_cause(cause):
     parent = current_node()
-    new_level = parent.level + 1 if parent else 1
+    new_level = parent.level + 1 if parent else 0
+    # Validación de profundidad máxima (nivel 5)
+    if new_level > 5:
+        st.error("¡Se alcanzó el máximo de niveles (5)!")
+        return
+
     new_node = TreeNode(cause, new_level)
 
     if parent:
@@ -80,6 +85,10 @@ def render_tree():
         else:
             node_style = {'fillcolor': '#E1F5FE', 'color': '#0277BD'}
 
+        if node.level == 5:  # Máximo nivel
+            dot.node(node_id, f"Nivel {node.level}\n{node.cause}", color='darkred')
+
+
         dot.node(
             node_id,
             f"Nivel {node.level}\n{node.cause}",
@@ -96,6 +105,41 @@ def render_tree():
 
     add_nodes(st.session_state.root)
     st.graphviz_chart(dot)
+
+
+# ---------- Modificación en get_all_nodes_hierarchically() ----------
+def get_all_nodes_hierarchically(node, nodes_list=None, depth=0):
+    if nodes_list is None:
+        nodes_list = []
+    if node is None:
+        return nodes_list
+
+    # Identación con guiones y nivel desde 0
+    indent = "--" * depth
+    node_label = f"{indent}→ Nivel {node.level}: {node.cause[:25]}..." if len(
+        node.cause) > 25 else f"{indent}→ Nivel {node.level}: {node.cause}"
+
+    nodes_list.append((str(id(node)), node_label))
+
+    # Recorrer hijos manteniendo orden original
+    for child in node.children:
+        get_all_nodes_hierarchically(child, nodes_list, depth + 1)
+
+    return nodes_list
+
+
+def find_node_by_id(node, target_id):
+    if node is None:
+        return None
+    if str(id(node)) == target_id:
+        return node
+    for child in node.children:
+        found = find_node_by_id(child, target_id)
+        if found:
+            return found
+    return None
+
+
 
 def main():
     st.title("Análisis arbol de causas")
@@ -124,12 +168,12 @@ def main():
             st.session_state.clear()
             st.rerun()
     with col3:
-        if node and current_lvl < 5 and st.button("➕ Agregar nueva causa", help="Añade otra causa en este mismo nivel"):
+        if node and current_lvl < 6 and st.button("➕ Agregar nueva causa", help="Añade otra causa en este mismo nivel"):
             st.session_state.adding_cause = True
             st.rerun()
 
     # Mostrar formulario solo si hay nodo actual
-    if node and (st.session_state.adding_cause or (current_lvl < 5 and not node.completed)):
+    if node and (st.session_state.adding_cause or (current_lvl < 6 and not node.completed)):
         with st.form("cause_form"):
             # Lógica de pregunta diferenciada
             if current_lvl == 0:
@@ -146,6 +190,41 @@ def main():
                     add_cause(new_cause.strip())
                 else:
                     st.error("¡Debe ingresar una descripción para la causa!")
+
+        # ==============================================
+        # Módulo de edición de nodos (añadir esto al final)
+        # ==============================================
+        st.sidebar.header("Editor de Causas")
+
+        # Obtener lista de nodos con jerarquía visual
+        all_nodes = get_all_nodes_hierarchically(st.session_state.root) if st.session_state.root else []
+
+        if all_nodes:
+            # Selector de nodo a editar
+            selected_node_id = st.sidebar.selectbox(
+                "Seleccione un nodo para editar:",
+                options=[node[0] for node in all_nodes],
+                format_func=lambda x: dict(all_nodes)[x]
+            )
+
+            # Buscar el nodo seleccionado
+            node_to_edit = find_node_by_id(st.session_state.root, selected_node_id)
+
+            if node_to_edit:
+                # Formulario de edición
+                with st.sidebar.form("edit_form"):
+                    new_cause = st.text_area(
+                        "Texto del nodo:",
+                        value=node_to_edit.cause,
+                        key="edit_cause"
+                    )
+
+                    if st.form_submit_button("💾 Guardar cambios"):
+                        node_to_edit.cause = new_cause.strip()
+                        st.rerun()
+        else:
+            st.sidebar.info("No hay nodos para editar aún")
+
 
 if __name__ == "__main__":
     main()
