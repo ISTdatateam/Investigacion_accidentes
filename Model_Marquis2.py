@@ -98,7 +98,7 @@ def render_tree():
     st.graphviz_chart(dot)
 
 def main():
-    st.title("Análisis de Causa Raíz - 5 Porqués")
+    st.title("Análisis arbol de causas")
     initialize_session()
 
     # Paso 1: Obtener la lesión inicial
